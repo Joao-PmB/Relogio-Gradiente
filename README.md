@@ -1,1 +1,2 @@
-Relógio Digital usando a função time do javascript, contabilizando as horas, segundos e minutos
+Relógio Digital com um gradiente e usando a função time do javascript, contabilizando:
+Horas, Minutos e Segundos
