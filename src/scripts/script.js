@@ -3,12 +3,13 @@ const minutos = document.getElementById('minutos');
 const segundos = document.getElementById('segundos');
 
 (async function getHorario() {
-  const url = "https://world-time-api3.p.rapidapi.com/timezone/Brazil/East";
+  const url =
+    "https://world-time-api3.p.rapidapi.com/timezone/America/Sao_Paulo";
   const options = {
     method: "GET",
     headers: {
       "x-rapidapi-key": CONFIG.API_KEY,
-      "x-rapidapi-host": "world-time-api3.p.rapidapi.com",
+      "x-rapidapi-host": CONFIG.HOST,
       "Content-Type": "application/json",
     },
   };
@@ -17,6 +18,8 @@ const segundos = document.getElementById('segundos');
     const response = await fetch(url, options);
     const result = await response.json();
     horaBase = new Date(result.datetime);
+
+    console.log(result);
 
     const relogio = setInterval(function time() {
       if (!horaBase) return;
