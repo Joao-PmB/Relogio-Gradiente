@@ -16,7 +16,7 @@ body {
     flex-direction: column;
 }
 
-.relogio {
+div.relogio {
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -25,6 +25,7 @@ body {
     background:transparent;
     border-radius: 3px;
     box-shadow: 0px 8px 10px rgba(0, 0, 0, .5);
+    
 }
 
 .relogio div {
@@ -49,4 +50,42 @@ body {
     font-size: 12px;
 }
 
+.selecao-horario {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.selecao-horario {
+    display: flex;
+    justify-content: center;
+    margin-top: 28px;
+}
+
+.selecao-horario select {
+    width: 280px;
+    height: 55px;
+
+    padding: 0 18px;
+
+    background: #1b1b1b;
+    color: #fff;
+
+    border: 2px solid #4fd1c5;
+    border-radius: 12px;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    text-align: center;
+    text-align-last: center;
+
+    cursor: pointer;
+    transition: .3s;
+}
+
+.selecao-horario select:hover {
+    border-color: #7ee8dd;
+}
 
