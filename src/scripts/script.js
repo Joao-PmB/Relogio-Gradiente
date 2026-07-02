@@ -1,10 +1,37 @@
-const horas = document.getElementById('horas');
-const minutos = document.getElementById('minutos');
-const segundos = document.getElementById('segundos');
+const horas = document.getElementById("horas");
+const minutos = document.getElementById("minutos");
+const segundos = document.getElementById("segundos");
+const fusohorarios = document.getElementById("timezones");
 
-(async function getHorario() {
-  const url =
-    "https://world-time-api3.p.rapidapi.com/timezone/America/Sao_Paulo";
+let relogio;
+
+const local = () => {
+  if (relogio) clearInterval(relogio);
+
+  function atualizarRelogioLocal() {
+    let dataHoje = new Date();
+    let hr = String(dataHoje.getHours()).padStart(2, "0");
+    let min = String(dataHoje.getMinutes()).padStart(2, "0");
+    let sec = String(dataHoje.getSeconds()).padStart(2, "0");
+
+    horas.textContent = hr;
+    minutos.textContent = min;
+    segundos.textContent = sec;
+  }
+
+  atualizarRelogioLocal();
+
+  relogio = setInterval(atualizarRelogioLocal, 1000);
+};
+
+async function getHorario(timezoneSelecionado) {
+  if (relogio) clearInterval(relogio);
+
+  horas.textContent = "--";
+  minutos.textContent = "--";
+  segundos.textContent = "--";
+
+  const url = `https://world-time-api3.p.rapidapi.com/timezone/${timezoneSelecionado}`;
   const options = {
     method: "GET",
     headers: {
@@ -17,29 +44,49 @@ const segundos = document.getElementById('segundos');
   try {
     const response = await fetch(url, options);
     const result = await response.json();
-    horaBase = new Date(result.datetime);
 
-    console.log(result);
+    let horaBase = new Date(result.datetime);
 
-    const relogio = setInterval(function time() {
+    function atualizarRelogioAPI() {
       if (!horaBase) return;
 
-      horaBase.setSeconds(horaBase.getSeconds() + 1);
+      const tempo = horaBase.toLocaleTimeString("pt-BR", {
+        timeZone: timezoneSelecionado,
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
 
-      let hr = horaBase.getHours();
-      let min = horaBase.getMinutes();
-      let sec = horaBase.getSeconds();
-
-      if (hr < 10) hr = "0" + hr;
-      if (min < 10) min = "0" + min;
-      if (sec < 10) sec = "0" + sec;
-
+      const [hr, min, sec] = tempo.split(":");
       horas.textContent = hr;
       minutos.textContent = min;
       segundos.textContent = sec;
-    }, 1000);
 
+      horaBase.setSeconds(horaBase.getSeconds() + 1);
+    }
+
+    atualizarRelogioAPI();
+
+    relogio = setInterval(atualizarRelogioAPI, 1000);
   } catch (error) {
     console.error(error);
+    horas.textContent = "ER";
+    minutos.textContent = "RO";
+    segundos.textContent = "!!";
   }
-})();
+}
+
+fusohorarios.addEventListener("change", (e) => {
+  const novoTimezone = e.target.value;
+  if (novoTimezone === "meuLocal") {
+    local();
+  } else {
+    getHorario(novoTimezone);
+  }
+});
+
+if (fusohorarios.value === "meuLocal") {
+  local();
+} else if (fusohorarios.value) {
+  getHorario(fusohorarios.value);
+}
